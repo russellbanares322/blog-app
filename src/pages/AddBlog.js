@@ -1,9 +1,10 @@
 import { collection, Timestamp, addDoc } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import React, { useState } from "react";
-import { Container, Form, Button, ProgressBar, Alert } from "react-bootstrap";
+import { Container, Form, Button, ProgressBar, Modal } from "react-bootstrap";
 import { storage, db } from "../firebase-config";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const AddBlog = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +14,7 @@ const AddBlog = () => {
     createdAt: Timestamp.now().toDate(),
   });
 
+  const navigate = useNavigate();
   const [progress, setProgress] = useState(0);
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,7 +26,7 @@ const AddBlog = () => {
 
   const handleSubmitBlog = () => {
     if (!formData.title || !formData.details || !formData.image) {
-      <Alert variant="danger">Fields cannot be empty!</Alert>;
+      toast.error("Fields cannot be empty.");
       return;
     }
     const storageRef = ref(
@@ -63,6 +65,7 @@ const AddBlog = () => {
             .then(() => {
               toast.info("Successfully added blog!");
               setProgress(0);
+              navigate("/");
             })
             .catch((err) => {
               toast.error("Failed adding blog, please try again.");
@@ -73,53 +76,67 @@ const AddBlog = () => {
   };
 
   return (
-    <Container className="border p-5">
-      <h3>Create Blog</h3>
-      <Form className="my-4">
-        <Form.Group className="mb-3">
-          <Form.Label>Title</Form.Label>
-          <Form.Control
-            type="text"
-            name="title"
-            placeholder="Enter title..."
-            value={formData.title}
-            onChange={(e) => handleChange(e)}
-          />
-        </Form.Group>
+    <Container>
+      <Modal.Dialog>
+        <Modal.Header>
+          <Modal.Title>Create Blog</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form className="my-4">
+            <Form.Group className="mb-3">
+              <Form.Label>Title</Form.Label>
+              <Form.Control
+                type="text"
+                name="title"
+                placeholder="Enter title..."
+                value={formData.title}
+                onChange={(e) => handleChange(e)}
+              />
+            </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Details</Form.Label>
-          <Form.Control
-            as="textarea"
-            placeholder="Enter details..."
-            style={{ height: "100px" }}
-            value={formData.details}
-            name="details"
-            onChange={(e) => handleChange(e)}
-          />
-        </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Details</Form.Label>
+              <Form.Control
+                as="textarea"
+                placeholder="Enter details..."
+                style={{ height: "100px" }}
+                value={formData.details}
+                name="details"
+                onChange={(e) => handleChange(e)}
+              />
+            </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Image</Form.Label>
-          <Form.Control
-            type="file"
-            name="image"
-            accept="image/*"
-            onChange={(e) => handleChangeImage(e)}
-          />
-        </Form.Group>
-        {progress === 0 ? null : (
-          <ProgressBar
-            className="mb-5"
-            style={{ width: `${progress}%` }}
-            label={`${progress}%`}
-          />
-        )}
+            <Form.Group className="mb-3">
+              <Form.Label>Image</Form.Label>
+              <Form.Control
+                type="file"
+                name="image"
+                accept="image/*"
+                onChange={(e) => handleChangeImage(e)}
+              />
+            </Form.Group>
+            {progress === 0 ? null : (
+              <div className="progress">
+                <div
+                  className="progress-bar mt-2"
+                  style={{ width: `${progress}%` }}
+                >
+                  {`${progress}% `}
+                </div>
+              </div>
+            )}
+          </Form>
+        </Modal.Body>
 
-        <Button variant="primary" type="submit" onClick={handleSubmitBlog}>
-          Submit
-        </Button>
-      </Form>
+        <Modal.Footer>
+          <Button variant="dark" onClick={() => navigate("/")}>
+            Return
+          </Button>
+          <Button variant="primary" onClick={handleSubmitBlog}>
+            Submit
+          </Button>
+        </Modal.Footer>
+      </Modal.Dialog>
     </Container>
   );
 };

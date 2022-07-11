@@ -1,7 +1,8 @@
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "../firebase-config";
 import React, { useState, useEffect } from "react";
-import { Container, Card, Button } from "react-bootstrap";
+import { Container, Card, Button, Row } from "react-bootstrap";
+import DeleteBlog from "./DeleteBlog";
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
   useEffect(() => {
@@ -17,30 +18,34 @@ const Blogs = () => {
     });
   }, []);
   return (
-    <div>
-      {blogs.length === 0 ? (
-        <h1>No blogs added.</h1>
-      ) : (
-        blogs.map(({ id, title, details, imageUrl, createdAt }) => (
-          <Container key={id}>
-            <Card
-              className="shadow border"
-              style={{ width: "20rem", height: "20px" }}
-            >
-              <Card.Img variant="top" src={imageUrl} />
-              <Card.Body>
-                <Card.Title>{title}</Card.Title>
-                <Card.Text>{details}</Card.Text>
-                <Button variant="primary">Go somewhere</Button>
-              </Card.Body>
-              <Card.Footer className="text-muted">
-                {createdAt.toDate().toDateString()}
-              </Card.Footer>
-            </Card>
-          </Container>
-        ))
-      )}
-    </div>
+    <>
+      <Container>
+        <Row>
+          {blogs.length === 0 ? (
+            <h1>No blogs added.</h1>
+          ) : (
+            blogs.map(({ id, title, details, imageUrl, createdAt }) => (
+              <Card
+                border="dark"
+                className="mx-3 p-3 my-3"
+                style={{ width: "20rem" }}
+                key={id}
+              >
+                <Card.Img className="py-2" variant="center" src={imageUrl} />
+                <Card.Body>
+                  <Card.Title>{title}</Card.Title>
+                  <Card.Text>{details}</Card.Text>
+                  <DeleteBlog id={id} imageUrl={imageUrl} />
+                </Card.Body>
+                <Card.Footer className="text-muted">
+                  {createdAt.toDate().toDateString()}
+                </Card.Footer>
+              </Card>
+            ))
+          )}
+        </Row>
+      </Container>
+    </>
   );
 };
 

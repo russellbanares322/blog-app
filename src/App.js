@@ -1,22 +1,24 @@
-import { Container, Row, Col } from "react-bootstrap";
+import { Container } from "react-bootstrap";
+import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import AddBlog from "./pages/AddBlog";
 import Blogs from "./pages/Blogs";
+import CNavbar from "./pages/CNavbar";
+import Login from "./pages/auth/Login";
+import SignUp from "./pages/auth/SignUp";
 
 function App() {
   return (
-    <div>
-      <Container>
-        <Row>
-          <Col className="my-5" sm={8}>
-            <Blogs />
-          </Col>
-          <Col className="my-5" sm={4}>
-            <AddBlog />
-          </Col>
-        </Row>
-      </Container>
-    </div>
+    <Container>
+      <CNavbar />
+
+      <Routes>
+        <Route path="/add" element={<AddBlog />} />
+        <Route path="/" element={<Blogs />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+      </Routes>
+    </Container>
   );
 }
 
