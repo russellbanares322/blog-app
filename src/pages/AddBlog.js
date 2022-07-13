@@ -1,10 +1,11 @@
 import { collection, Timestamp, addDoc } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import React, { useState } from "react";
-import { Container, Form, Button, ProgressBar, Modal } from "react-bootstrap";
-import { storage, db } from "../firebase-config";
+import { Container, Form, Button, Modal } from "react-bootstrap";
+import { storage, db, auth } from "../firebase-config";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const AddBlog = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +15,7 @@ const AddBlog = () => {
     createdAt: Timestamp.now().toDate(),
   });
 
+  const [user] = useAuthState(auth);
   const navigate = useNavigate();
   const [progress, setProgress] = useState(0);
   const handleChange = (e) => {
@@ -61,6 +63,10 @@ const AddBlog = () => {
             details: formData.details,
             imageUrl: url,
             createdAt: Timestamp.now().toDate(),
+            createdBy: user.displayName,
+            userId: user.uid,
+            likes: [],
+            comments: [],
           })
             .then(() => {
               toast.info("Successfully added blog!");

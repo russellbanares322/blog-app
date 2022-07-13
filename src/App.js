@@ -6,6 +6,7 @@ import Blogs from "./pages/Blogs";
 import CNavbar from "./pages/CNavbar";
 import Login from "./pages/auth/Login";
 import SignUp from "./pages/auth/SignUp";
+import BlogDetails from "./pages/BlogDetails";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Routes>
         <Route path="/add" element={<AddBlog />} />
         <Route path="/" element={<Blogs />} />
+        <Route path="/blogs/:id" element={<BlogDetails />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
       </Routes>

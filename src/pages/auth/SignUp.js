@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Container, Form, Button, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "../../firebase-config";
+import { toast } from "react-toastify";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -8,6 +11,17 @@ const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const handleSignUp = async () => {
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      updateProfile(auth.currentUser, { displayName: name });
+      navigate("/");
+      toast.success("Successfully created account!");
+    } catch (error) {
+      toast.error("Failed to signup");
+    }
+  };
 
   return (
     <Container className="mx-auto text-center d-flex justify-content-center">
@@ -40,7 +54,7 @@ const SignUp = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </Form.Group>
-          <Button className="mt-2 mb-2" variant="info">
+          <Button className="mt-2 mb-2" variant="info" onClick={handleSignUp}>
             Signup
           </Button>
           <br />
