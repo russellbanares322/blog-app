@@ -20,7 +20,6 @@ root.render(
       pauseOnFocusLoss
       draggable
       pauseOnHover
-      delay={1000}
     />
   </BrowserRouter>
 );

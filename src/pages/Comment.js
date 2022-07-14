@@ -64,63 +64,65 @@ const Comment = ({ id }) => {
 
   return (
     <Container>
-      {loggedUser && (
-        <>
-          <FloatingLabel
-            controlId="floatingTextarea"
-            label="Write a comment..."
-            className="mb-3 text-muted"
-          >
-            <Form.Control
-              placeholder="Leave a comment here"
-              as="textarea"
-              value={comment}
-              onChange={(e) => {
-                setComment(e.target.value);
-              }}
-              onKeyUp={(e) => {
-                handleChangeComment(e);
-              }}
-            />
-          </FloatingLabel>
-        </>
-      )}
-
-      {comments !== null &&
-        comments.map(({ comment, commentId, user, userName, createdAt }) => (
-          <div key={commentId}>
-            <Row>
-              <Col sm={11}>
-                <Alert variant="secondary">
-                  <Badge
-                    variant={`${user === loggedUser.uid ? "info" : "dark"}`}
-                  >
-                    {userName}
-                  </Badge>
-                  <hr />
-                  <p className="text-dark">{comment}</p>
-                </Alert>
-              </Col>
-              <Col className="my-2" sm={1}>
-                {user === loggedUser.uid && (
-                  <MdDelete
-                    className="delete_icon"
-                    size={30}
-                    onClick={() =>
-                      handleDeleteComment({
-                        comment,
-                        commentId,
-                        user,
-                        userName,
-                        createdAt,
-                      })
-                    }
-                  />
-                )}
-              </Col>
-            </Row>
-          </div>
-        ))}
+      <div className="p-5 comment_input border mb-5">
+        {loggedUser && (
+          <>
+            <FloatingLabel
+              controlId="floatingTextarea"
+              label="Write a comment..."
+              className="mb-3 text-muted"
+            >
+              <Form.Control
+                placeholder="Leave a comment here"
+                as="textarea"
+                value={comment}
+                onChange={(e) => {
+                  setComment(e.target.value);
+                }}
+                onKeyUp={(e) => {
+                  handleChangeComment(e);
+                }}
+              />
+            </FloatingLabel>
+          </>
+        )}
+        <h6>Comments</h6>
+        {comments !== null &&
+          comments.map(({ comment, commentId, user, userName, createdAt }) => (
+            <div key={commentId}>
+              <Row>
+                <Col sm={11}>
+                  <Alert variant="secondary">
+                    <Badge
+                      variant={`${user === loggedUser.uid ? "info" : "dark"}`}
+                    >
+                      {userName}
+                    </Badge>
+                    <hr />
+                    <p className="text-dark">{comment}</p>
+                  </Alert>
+                </Col>
+                <Col className="my-2" sm={1}>
+                  {user === loggedUser.uid && (
+                    <MdDelete
+                      className="delete_icon"
+                      size={30}
+                      onClick={() =>
+                        handleDeleteComment({
+                          comment,
+                          commentId,
+                          user,
+                          userName,
+                          createdAt,
+                        })
+                      }
+                    />
+                  )}
+                </Col>
+              </Row>
+            </div>
+          ))}
+      </div>
     </Container>
   );
 };

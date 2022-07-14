@@ -26,13 +26,13 @@ const BlogDetails = () => {
             <h1 className="text-center">{blog.title}</h1>
           </Col>
 
-          <Col className="mt-5" sm={12}>
+          <Col className="mt-5 mb-5" sm={12}>
             <Row>
-              <Col sm={5}>
-                <Image src={blog.imageUrl} fluid />
+              <Col sm={7}>
+                <Image className="image_details" src={blog.imageUrl} fluid />
               </Col>
 
-              <Col sm={7}>
+              <Col sm={5}>
                 <h6 className="d-flex justify-content-center mb-3">
                   {blog.createdAt.toDate().toDateString()}
                 </h6>
@@ -49,12 +49,14 @@ const BlogDetails = () => {
               <>
                 <Col sm={12}>
                   <Row>
-                    <Col className="d-flex" sm={2}>
+                    <h6>Likes</h6>
+                    <Col className="d-flex" sm={1}>
                       <p className="pt-2 ml-5">{blog.likes.length}</p>
 
                       <LikesBlog id={id} likes={blog.likes} />
                     </Col>
-                    <Col sm={10} className="border p-5">
+
+                    <Col sm={11}>
                       <Comment id={blog.id} />
                     </Col>
                   </Row>

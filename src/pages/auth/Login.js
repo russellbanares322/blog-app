@@ -1,15 +1,17 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
-import { Container, Form, Button, Col } from "react-bootstrap";
+import { Container, Form, Button, Col, InputGroup } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../firebase-config";
 import { toast } from "react-toastify";
 
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 const Login = () => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogIn = async () => {
     try {
@@ -21,6 +23,9 @@ const Login = () => {
     }
   };
 
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
   return (
     <Container className="mx-auto text-center d-flex justify-content-center">
       <Col sm={6}>
@@ -38,11 +43,20 @@ const Login = () => {
 
           <Form.Group className="mb-3">
             <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Password"
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <InputGroup>
+              <Form.Control
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                onChange={(e) => setPassword(e.target.value)}
+              />
+
+              <InputGroup.Text
+                onClick={handleShowPassword}
+                style={{ cursor: "pointer" }}
+              >
+                {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+              </InputGroup.Text>
+            </InputGroup>
           </Form.Group>
           <Button className="mt-2 mb-2" variant="info" onClick={handleLogIn}>
             Login

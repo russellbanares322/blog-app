@@ -1,7 +1,7 @@
 import { collection, Timestamp, addDoc } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import React, { useState } from "react";
-import { Container, Form, Button, Modal } from "react-bootstrap";
+import { Container, Form, Button, Modal, ProgressBar } from "react-bootstrap";
 import { storage, db, auth } from "../firebase-config";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -113,7 +113,7 @@ const AddBlog = () => {
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Image</Form.Label>
+              <Form.Label>Thumbnail Image</Form.Label>
               <Form.Control
                 type="file"
                 name="image"
@@ -121,15 +121,13 @@ const AddBlog = () => {
                 onChange={(e) => handleChangeImage(e)}
               />
             </Form.Group>
+
             {progress === 0 ? null : (
-              <div className="progress">
-                <div
-                  className="progress-bar mt-2"
-                  style={{ width: `${progress}%` }}
-                >
-                  {`${progress}% `}
-                </div>
-              </div>
+              <ProgressBar
+                className="progress-bar mt-2"
+                label={`${progress}% `}
+                now={`${progress}% `}
+              />
             )}
           </Form>
         </Modal.Body>

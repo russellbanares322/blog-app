@@ -52,24 +52,34 @@ const Blogs = () => {
                   <Card.Body>
                     <Col sm={12}>
                       <Row>
-                        <Col sm={6}>
+                        <Col sm={8}>
                           <Link to={`/blogs/${id}`}>
                             <Button variant="outline-info" size="sm">
                               View Details
                             </Button>
                           </Link>
                         </Col>
-                        <Col sm={6}>
+                        <Col sm={4}>
                           {user && <LikesBlog id={id} likes={likes} />}
                         </Col>
                       </Row>
                     </Col>
 
-                    <Card.Title>{title}</Card.Title>
-                    <Card.Text>{details}</Card.Text>
+                    <hr />
+                    <Card.Title className="text-center mb-2">
+                      {title}
+                    </Card.Title>
+                    <hr />
+                    <Card.Text className="details_text pt-3">
+                      {details}
+                    </Card.Text>
+                    <hr />
                     {createdBy && (
                       <>
-                        <h6>{createdBy}</h6>
+                        <h6 className="mt-5">
+                          <span className="posted_text">Posted by:</span>{" "}
+                          {createdBy}
+                        </h6>
                       </>
                     )}
                     {user && user.uid === userId && (

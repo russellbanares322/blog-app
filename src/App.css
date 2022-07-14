@@ -5,3 +5,21 @@
     transform: translateY(5px);
     transition: 0.2s ease-in-out;
 }
+
+.details_text {
+    display: block;
+  width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.posted_text {
+    font-size: 11px;
+}
+
+.comment_input {
+    box-shadow: rgb(0, 0, 0) 7px 8px, rgb(78, 76, 76) 13px 15px;
+}
+.image_details {
+    box-shadow:  rgb(53, 54, 54) 10px 10px;
+}

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Container, Form, Button, Col } from "react-bootstrap";
+import { Container, Form, Button, Col, InputGroup } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../../firebase-config";
 import { toast } from "react-toastify";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -21,6 +22,11 @@ const SignUp = () => {
     } catch (error) {
       toast.error("Failed to signup");
     }
+  };
+
+  const [showPassword, setShowPassword] = useState(false);
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -48,11 +54,20 @@ const SignUp = () => {
 
           <Form.Group className="mb-3">
             <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Password"
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <InputGroup>
+              <Form.Control
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                onChange={(e) => setPassword(e.target.value)}
+              />
+
+              <InputGroup.Text
+                onClick={handleShowPassword}
+                style={{ cursor: "pointer" }}
+              >
+                {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+              </InputGroup.Text>
+            </InputGroup>
           </Form.Group>
           <Button className="mt-2 mb-2" variant="info" onClick={handleSignUp}>
             Signup
