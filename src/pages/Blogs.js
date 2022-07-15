@@ -1,7 +1,15 @@
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { auth, db } from "../firebase-config";
 import React, { useState, useEffect } from "react";
-import { Container, Card, Button, Row, Col } from "react-bootstrap";
+import {
+  Container,
+  Card,
+  Button,
+  Row,
+  Col,
+  Stack,
+  Badge,
+} from "react-bootstrap";
 import DeleteBlog from "./DeleteBlog";
 import { useAuthState } from "react-firebase-hooks/auth";
 import LikesBlog from "./LikesBlog";
@@ -40,7 +48,7 @@ const Blogs = () => {
                 createdBy,
                 userId,
                 likes,
-                comment,
+                comments,
               }) => (
                 <Card
                   border="dark"
@@ -59,11 +67,21 @@ const Blogs = () => {
                             </Button>
                           </Link>
                         </Col>
-                        <Col sm={4}>
-                          {user && <LikesBlog id={id} likes={likes} />}
-                        </Col>
                       </Row>
                     </Col>
+                    <Stack className="mt-3" direction="horizontal" gap={3}>
+                      <div>
+                        <p>{likes?.length} rates</p>
+                      </div>
+                      <div>
+                        {comments && comments.length > 0 && (
+                          <p>{comments?.length} comments</p>
+                        )}
+                      </div>
+                      <div className="ms-auto">
+                        {user && <LikesBlog id={id} likes={likes} />}
+                      </div>
+                    </Stack>
 
                     <hr />
                     <Card.Title className="text-center mb-2">
@@ -76,9 +94,10 @@ const Blogs = () => {
                     <hr />
                     {createdBy && (
                       <>
-                        <h6 className="mt-5">
-                          <span className="posted_text">Posted by:</span>{" "}
-                          {createdBy}
+                        <h6 className="mt-1">
+                          <Badge pill bg="dark">
+                            {createdBy}
+                          </Badge>
                         </h6>
                       </>
                     )}

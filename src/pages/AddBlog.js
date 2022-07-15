@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-const AddBlog = () => {
+const AddBlog = ({ showModal, handleModal }) => {
   const [formData, setFormData] = useState({
     title: "",
     details: "",
@@ -72,6 +72,7 @@ const AddBlog = () => {
               toast.info("Successfully added blog!");
               setProgress(0);
               navigate("/");
+              handleModal();
             })
             .catch((err) => {
               toast.error("Failed adding blog, please try again.");
@@ -83,8 +84,14 @@ const AddBlog = () => {
 
   return (
     <Container>
-      <Modal.Dialog>
-        <Modal.Header>
+      <Modal
+        className="border shadow"
+        show={showModal}
+        onHide={handleModal}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
           <Modal.Title>Create Blog</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -133,14 +140,14 @@ const AddBlog = () => {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="dark" onClick={() => navigate("/")}>
+          <Button variant="dark" onClick={handleModal}>
             Return
           </Button>
           <Button variant="primary" onClick={handleSubmitBlog}>
             Submit
           </Button>
         </Modal.Footer>
-      </Modal.Dialog>
+      </Modal>
     </Container>
   );
 };

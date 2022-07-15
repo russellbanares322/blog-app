@@ -2,8 +2,8 @@ import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import { Container } from "react-bootstrap";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import { auth, db } from "../firebase-config";
+import { BsStar, BsStarFill } from "react-icons/bs";
 
 const LikesBlog = ({ id, likes }) => {
   const [user] = useAuthState(auth);
@@ -36,14 +36,10 @@ const LikesBlog = ({ id, likes }) => {
   return (
     <Container className="text-right mb-4">
       {!likes?.includes(user.uid) ? (
-        <AiOutlineLike
-          size={30}
-          style={{ cursor: "pointer" }}
-          onClick={handleLike}
-        />
+        <BsStar size={20} style={{ cursor: "pointer" }} onClick={handleLike} />
       ) : (
-        <AiFillLike
-          size={30}
+        <BsStarFill
+          size={20}
           style={{ cursor: "pointer" }}
           onClick={handleLike}
         />

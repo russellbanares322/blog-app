@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-  Container,
-  Navbar,
-  Nav,
-  NavDropdown,
-  Form,
-  FormControl,
-  Button,
-} from "react-bootstrap";
+import { Container, Navbar, Nav, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase-config";
@@ -15,7 +7,7 @@ import { FaUserAlt } from "react-icons/fa";
 import { signOut } from "firebase/auth";
 import { toast } from "react-toastify";
 
-const CNavbar = () => {
+const CNavbar = ({ handleModal }) => {
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
 
@@ -46,11 +38,7 @@ const CNavbar = () => {
             ) : (
               <>
                 <Nav className="me-auto">
-                  <Button
-                    variant="info"
-                    onClick={() => navigate("/add")}
-                    size="sm"
-                  >
+                  <Button variant="info" onClick={handleModal} size="sm">
                     Add Blog
                   </Button>
                 </Nav>
