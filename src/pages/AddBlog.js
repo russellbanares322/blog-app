@@ -1,19 +1,49 @@
-import { collection, Timestamp, addDoc } from "firebase/firestore";
+import {
+  collection,
+  Timestamp,
+  addDoc,
+  doc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import React, { useState } from "react";
-import { Container, Form, Button, Modal, ProgressBar } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import {
+  Container,
+  Form,
+  Button,
+  Modal,
+  ProgressBar,
+  Col,
+  Row,
+} from "react-bootstrap";
 import { storage, db, auth } from "../firebase-config";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-const AddBlog = ({ showModal, handleModal }) => {
+const AddBlog = () => {
   const [formData, setFormData] = useState({
     title: "",
     details: "",
     image: "",
+    price: "",
     createdAt: Timestamp.now().toDate(),
   });
+
+  const { id } = useParams();
+
+  useEffect(() => {
+    id && getSingleUser();
+  }, [id]);
+
+  const getSingleUser = async () => {
+    const blogRef = doc(db, "BlogsData", id);
+    const snapshot = await getDoc(blogRef);
+    if (snapshot.exists()) {
+      setFormData({ ...snapshot.data() });
+    }
+  };
 
   const [user] = useAuthState(auth);
   const navigate = useNavigate();
@@ -22,12 +52,19 @@ const AddBlog = ({ showModal, handleModal }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleChangeImage = (e) => {
+  const handleChangeImage = async (e) => {
     setFormData({ ...formData, image: e.target.files[0] });
   };
 
-  const handleSubmitBlog = () => {
-    if (!formData.title || !formData.details || !formData.image) {
+  const handleSubmitBlog = (e) => {
+    e.preventDefault();
+    if (
+      !formData.title ||
+      !formData.details ||
+      !formData.image ||
+      !formData.price ||
+      !formData.location
+    ) {
       toast.error("Fields cannot be empty.");
       return;
     }
@@ -54,48 +91,71 @@ const AddBlog = ({ showModal, handleModal }) => {
           title: "",
           details: "",
           image: "",
+          price: "",
+          location: "",
         });
 
         getDownloadURL(uploadImage.snapshot.ref).then((url) => {
           const blogRef = collection(db, "BlogsData");
-          addDoc(blogRef, {
-            title: formData.title,
-            details: formData.details,
-            imageUrl: url,
-            createdAt: Timestamp.now().toDate(),
-            createdBy: user.displayName,
-            userId: user.uid,
-            likes: [],
-            comments: [],
-          })
-            .then(() => {
-              toast.info("Successfully added blog!");
-              setProgress(0);
-              navigate("/");
-              handleModal();
+
+          if (!id) {
+            addDoc(blogRef, {
+              title: formData.title,
+              details: formData.details,
+              price: formData.price,
+              location: formData.location,
+              imageUrl: url,
+              createdAt: Timestamp.now().toDate(),
+              createdBy: user.displayName,
+              userId: user.uid,
+              likes: [],
+              comments: [],
             })
-            .catch((err) => {
-              toast.error("Failed adding blog, please try again.");
-            });
+              .then(() => {
+                toast.info("Successfully Posted Property!");
+                setProgress(0);
+                navigate("/");
+              })
+              .catch((err) => {
+                toast.error("Failed to add blog, please try again.");
+              });
+          } else {
+            updateDoc(doc(db, "BlogsData", id), {
+              title: formData.title,
+              details: formData.details,
+              price: formData.price,
+              location: formData.location,
+              imageUrl: url,
+              createdAt: Timestamp.now().toDate(),
+              createdBy: user.displayName,
+              userId: user.uid,
+              likes: [],
+              comments: [],
+            })
+              .then(() => {
+                toast.info("Successfully Updated Property!");
+                setProgress(0);
+                navigate("/");
+              })
+              .catch((err) => {
+                toast.error("Failed to update blog, please try again.");
+              });
+          }
         });
       }
     );
   };
 
   return (
-    <Container>
-      <Modal
-        className="border shadow"
-        show={showModal}
-        onHide={handleModal}
-        backdrop="static"
-        keyboard={false}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Create Blog</Modal.Title>
+    <Container fluid>
+      <Modal.Dialog size="lg">
+        <Modal.Header className="bg-dark text-white">
+          <Modal.Title className="mx-auto">
+            {id ? "Update Property" : "Post Property"}
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <Form className="my-4">
+        <Modal.Body className="bg-dark">
+          <Form className="my-4 text-white">
             <Form.Group className="mb-3">
               <Form.Label>Title</Form.Label>
               <Form.Control
@@ -106,6 +166,34 @@ const AddBlog = ({ showModal, handleModal }) => {
                 onChange={(e) => handleChange(e)}
               />
             </Form.Group>
+            <Col sm={12}>
+              <Row>
+                <Col sm={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Price</Form.Label>
+                    <Form.Control
+                      type="number"
+                      name="price"
+                      placeholder="Enter price..."
+                      value={formData.price}
+                      onChange={(e) => handleChange(e)}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col sm={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Location</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="location"
+                      placeholder="Enter location..."
+                      value={formData.location}
+                      onChange={(e) => handleChange(e)}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+            </Col>
 
             <Form.Group className="mb-3">
               <Form.Label>Details</Form.Label>
@@ -132,6 +220,7 @@ const AddBlog = ({ showModal, handleModal }) => {
             {progress === 0 ? null : (
               <ProgressBar
                 className="progress-bar mt-2"
+                animated
                 label={`${progress}% `}
                 now={`${progress}% `}
               />
@@ -139,15 +228,15 @@ const AddBlog = ({ showModal, handleModal }) => {
           </Form>
         </Modal.Body>
 
-        <Modal.Footer>
-          <Button variant="dark" onClick={handleModal}>
+        <Modal.Footer className="bg-dark text-white">
+          <Button variant="light" onClick={() => navigate("/")}>
             Return
           </Button>
           <Button variant="primary" onClick={handleSubmitBlog}>
-            Submit
+            {id ? "Save" : "Post"}
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal.Dialog>
     </Container>
   );
 };

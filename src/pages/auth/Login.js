@@ -19,7 +19,7 @@ const Login = () => {
       navigate("/");
       toast.success("Successfully logged in!");
     } catch (error) {
-      toast.error("Failed to login");
+      toast.error("Invalid username or password");
     }
   };
 
@@ -54,7 +54,7 @@ const Login = () => {
                 onClick={handleShowPassword}
                 style={{ cursor: "pointer" }}
               >
-                {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                {showPassword ? <FaEye size={20} /> : <FaEyeSlash size={20} />}
               </InputGroup.Text>
             </InputGroup>
           </Form.Group>

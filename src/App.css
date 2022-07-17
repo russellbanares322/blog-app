@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&family=VT323&display=swap');
+
+* {
+    font-family: 'Poppins';
+
+}
 .delete_icon {
     cursor: pointer;
 }
@@ -22,4 +28,9 @@
 }
 .image_details {
     box-shadow:  rgb(53, 54, 54) 10px 10px;
+}
+
+.date_text {
+    font-size: 14px !important;
+    font-style: italic;
 }

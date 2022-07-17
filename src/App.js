@@ -9,31 +9,31 @@ import Login from "./pages/auth/Login";
 import SignUp from "./pages/auth/SignUp";
 import BlogDetails from "./pages/BlogDetails";
 import ErrorPage from "./pages/ErrorPage";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "./firebase-config";
 
 function App() {
-  const [showModal, setShowModal] = useState(false);
-
-  const handleModal = () => {
-    setShowModal(!showModal);
-  };
+  const [user] = useAuthState(auth);
 
   return (
-    <Container>
-      <CNavbar handleModal={handleModal} />
+    <>
+      <CNavbar />
 
-      <AddBlog
-        showModal={showModal}
-        setShowModal={setShowModal}
-        handleModal={handleModal}
-      />
       <Routes>
+        {user && (
+          <>
+            <Route path="/add" element={<AddBlog />} />
+            <Route path="/edit/:id" element={<AddBlog />} />
+            <Route path="/blogs/:id" element={<BlogDetails />} />
+          </>
+        )}
+
         <Route path="/" element={<Blogs />} />
-        <Route path="/blogs/:id" element={<BlogDetails />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
-    </Container>
+    </>
   );
 }
 

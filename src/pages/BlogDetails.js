@@ -19,7 +19,7 @@ const BlogDetails = () => {
     });
   }, []);
   return (
-    <Container>
+    <Container fluid>
       {blog && (
         <>
           <Col sm={12}>
@@ -31,19 +31,44 @@ const BlogDetails = () => {
               <Col sm={7}>
                 <Image className="image_details" src={blog.imageUrl} fluid />
               </Col>
-              <Col sm={5}>
-                <h6 className="d-flex justify-content-center mb-3">
-                  {blog.createdAt.toDate().toDateString()}
+              <Col sm={5} className="text-center">
+                <h6 className="mt-5 date_text">
+                  Posted on {blog.createdAt.toDate().toDateString()}
                 </h6>
-                <p>{blog.details}</p>
-                <small>
-                  <i>~{blog.createdBy}</i>
-                </small>
+                <p className="pt-4">{blog.details}</p>
               </Col>
             </Row>
           </Col>
           <hr />
-          <Container>
+          <Col className="text-center" sm={12}>
+            <h1 className=" mb-5">Images</h1>
+            <Row>
+              <Col sm={3}>Image 1</Col>
+              <Col sm={3}>Image 2</Col>
+              <Col sm={3}>Image 3</Col>
+              <Col sm={3}>Image 4</Col>
+            </Row>
+          </Col>
+          <hr />
+          <Col sm={12}>
+            <Row>
+              <Col sm={9}>
+                <Row>
+                  <Col sm={4} className="d-flex justify-content-center">
+                    <h1>Amenities</h1>
+                  </Col>
+                  <Col sm={4} className="d-flex justify-content-center">
+                    <h1>Near Stores</h1>
+                  </Col>
+                </Row>
+              </Col>
+
+              <Col sm={3} className="d-flex justify-content-center">
+                <h1>Contact Info</h1>
+              </Col>
+            </Row>
+          </Col>
+          <Container fluid>
             {user && (
               <>
                 <Col sm={12}>
